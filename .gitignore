@@ -1,0 +1,60 @@
+# 编译生成的二进制文件
+/build/
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go 编译缓存文件
+*.test
+*.out
+
+# 项目配置文件（可根据需要决定是否忽略）
+config.yaml
+config.json
+.env
+
+# 日志文件
+*.log
+
+# 临时文件和目录
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# IDE 和编辑器配置文件
+.idea/
+.vscode/
+*.iml
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# Node.js 前端项目（如 Vue）生成的文件
+node_modules/
+dist/
+
+# 静态文件打包生成的目录（可选，根据项目配置）
+public/
+
+# 数据库文件（如果是本地开发测试数据库）
+*.db
+*.sqlite
+
+# 覆盖测试输出文件
+coverage.out
+
+# Docker 忽略的文件
+docker-compose.override.yml
+
+# Git 相关的
+.git/
+
+# Go 模块和缓存（根据需求忽略）
+/vendor/
+go.sum
+
+.air.toml
