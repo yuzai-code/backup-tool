@@ -5,6 +5,7 @@ import (
 	"backup-tool/config" // 导入 config 包
 	"backup-tool/config/db"
 	"backup-tool/router"
+	"backup-tool/utils"
 	"log"
 	"os"
 )
@@ -29,7 +30,7 @@ func main() {
 	}
 
 	// 正确初始化 zap 日志器
-	logger := config.InitZapLogger() // 从 config 包直接调用 InitZapLogger，而不是从 cfg 结构体
+	logger := utils.InitZapLogger() // 从 config 包直接调用 InitZapLogger，而不是从 cfg 结构体
 
 	// 初始化路由
 	r := router.InitRouter(dbConn, logger)

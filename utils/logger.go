@@ -1,5 +1,5 @@
 // config/logger.go
-package config
+package utils
 
 import (
 	"log"
