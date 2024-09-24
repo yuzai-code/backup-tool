@@ -24,7 +24,7 @@ func main() {
 	}
 
 	// 初始化数据库连接
-	dbConn, err := db.NewDBConnection(cfg)
+	dbConn, err := db.InitDBConnection()
 	if err != nil {
 		log.Fatalf("连接数据库失败: %v", err)
 	}

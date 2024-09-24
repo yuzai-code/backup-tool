@@ -16,16 +16,21 @@ type Config struct {
 
 // ServerConfig结构体定义了服务器的配置，包括端口号
 type ServerConfig struct {
-	Port string
+	Port  string // 端口号
+	Debug bool   // 调试模式
 }
 
 // DatabaseConfig结构体定义了数据库的配置，包括主机地址、端口号、用户名、密码和数据库名称
 type DatabaseConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Database string
+	Host       string // 主机地址
+	User       string // 用户名
+	Password   string // 密码
+	Database   string // 数据库名称
+	Charset    string // 字符集
+	DBFile     string // 数据库文件
+	Type       string // 数据库类型
+	Port       int    // 端口号
+	UnixSocket bool
 }
 
 // LoadConfig 函数根据给定的环境名称加载相应的配置文件，并将其解析为Config结构体。

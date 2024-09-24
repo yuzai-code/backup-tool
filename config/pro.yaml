@@ -5,7 +5,8 @@ server:
   port: ":80"
 database:
   host: "prod-db-host"
-  port: "5432"
+  port: 5432
   user: "produser"
   password: "prodpassword"
   dbname: "proddb"
+
