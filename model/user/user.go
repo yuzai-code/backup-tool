@@ -10,3 +10,5 @@ type User struct {
 	Password   string `gorm:"columnn:password;not null" json:"password"`
 	BackupPath string `gorm:"column:backup_path;default:null" json:"backup_path"`
 }
+
+// 用户注册
