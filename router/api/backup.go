@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterBackupRouter(r *gin.RouterGroup) {
+func BackupRouter(r *gin.RouterGroup) {
 	// backup router
 	backupRouter := r.Group("/backup")
 	{

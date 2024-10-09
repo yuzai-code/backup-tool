@@ -1,13 +1,36 @@
+// package user service/user/register.go
 package user
 
-import "github.com/gin-gonic/gin"
+import (
+	"backup-tool/model"
+	"backup-tool/repository"
+	"errors"
 
-// UserRegisterService 管理注册用户服务
-type UserRegisterService struct {
-	UserName string `form:"username" json:"username" binding:"required,email"`
-	Password string `form:"password" json:"password" binding:"required，min=4,max=16"`
+	"golang.org/x/crypto/bcrypt"
+)
+
+// UserService
+type UserService struct {
+	userRepo *repository.UserRepository
 }
 
-// 注册用户
-func (service *UserRegisterService) Register(c *gin.Context) serializer.Response {
+func NewUserService(userRepo *repository.UserRepository) *UserService {
+	return &UserService{userRepo: userRepo}
+}
+
+func (s *UserService) Register(user *model.User) error {
+	// 检查用户是否存在
+	existingUser, _ := s.userRepo.FindByUsername(user.Username)
+	if existingUser != nil {
+		return errors.New("username already exists")
+	}
+
+	// 哈希密码
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	user.Password = string(hashPassword)
+	// 创建用户
+	return s.userRepo.Create(user)
 }
