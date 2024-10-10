@@ -2,7 +2,7 @@
 package api
 
 import (
-	"backup-tool/services"
+	"backup-tool/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,6 +11,6 @@ func BackupRouter(r *gin.RouterGroup) {
 	// backup router
 	backupRouter := r.Group("/backup")
 	{
-		backupRouter.POST("/", services.HandleBackup)
+		backupRouter.POST("/", service.HandleBackup)
 	}
 }

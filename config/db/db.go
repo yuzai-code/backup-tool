@@ -3,6 +3,7 @@ package db
 
 import (
 	"backup-tool/config"
+	"backup-tool/model"
 	"fmt"
 	"log"
 	"os"
@@ -79,7 +80,7 @@ func InitDBConnection() (*gorm.DB, error) {
 		sqlDB.SetConnMaxLifetime(time.Hour) // 连接最大存活时间
 
 		// 自动迁移数据库结构
-		err = db.AutoMigrate()
+		err = db.AutoMigrate(&model.User{})
 		if err != nil {
 			return nil, err
 		}

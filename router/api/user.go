@@ -2,9 +2,9 @@
 package api
 
 import (
-	"backup-tool/handler"
-	"backup-tool/repository"
-	"backup-tool/services/user"
+	handler "backup-tool/internal/handle"
+	repository "backup-tool/internal/repository"
+	service "backup-tool/internal/service/user"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ import (
 
 func InitUserRoutes(r *gin.RouterGroup, db *gorm.DB) {
 	userRepo := repository.NewUserRepository(db)
-	userService := user.NewUserService(userRepo)
+	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
 
 	userRoutes := r.Group("/user")

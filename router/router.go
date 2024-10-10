@@ -30,7 +30,7 @@ func InitRouter(db *gorm.DB, logger *zap.Logger) *gin.Engine {
 	// 注册路由组
 	apiBase := r.Group("/api")
 	// api.RegisterBackupRouter(r.Group("/api"))
-	api.InitUserRoutes(apiBase, db)
+	api.InitUserRoutes(apiBase, db) // 初始化用户路由
 
 	return r
 }
