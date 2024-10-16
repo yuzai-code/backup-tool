@@ -51,6 +51,7 @@ func InitDBConnection() (*gorm.DB, error) {
 		case "UNSET", "sqlite":
 			// 未设置数据库类型，使用SQLite数据库
 			db, err = gorm.Open(sqlite.Open(config.DatabaseDefaultConfig.DBFile), &gorm.Config{})
+			fmt.Println("数据库使用sqlite")
 		case "mysql":
 			// 使用MySQL数据库
 			dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -64,7 +65,7 @@ func InitDBConnection() (*gorm.DB, error) {
 				Logger: newLogger,
 			})
 		default:
-			return nil, fmt.Errorf("unsupported database type: %s", confDBType)
+			return nil, fmt.Errorf("没有支持的数据库类型: %s", confDBType)
 		}
 		if err != nil {
 			return nil, err
@@ -81,6 +82,7 @@ func InitDBConnection() (*gorm.DB, error) {
 
 		// 自动迁移数据库结构
 		err = db.AutoMigrate(&model.User{})
+		err = db.AutoMigrate(&model.Path{})
 		if err != nil {
 			return nil, err
 		}

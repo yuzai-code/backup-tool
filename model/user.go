@@ -1,4 +1,4 @@
-// package model /model/user
+// Package model package model /model/user
 package model
 
 import (

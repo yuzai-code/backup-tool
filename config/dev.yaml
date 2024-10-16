@@ -9,4 +9,3 @@ database:
   user: "root"
   password: "mypass"
   dbname: "backup"
-

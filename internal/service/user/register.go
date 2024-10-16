@@ -9,12 +9,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// UserService
 type UserService interface {
 	Register(user *model.User) error
 }
 
-// UserServiceImpl
 type UserServiceImpl struct {
 	userRepo repository.UserRepository
 }
