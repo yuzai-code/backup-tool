@@ -2,7 +2,6 @@
 package router
 
 import (
-	"backup-tool/middleware"
 	"backup-tool/router/api"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +15,7 @@ func InitRouter(db *gorm.DB, logger *zap.Logger) *gin.Engine {
 	r := gin.New()
 
 	// 使用 zap 日志中间件
-	r.Use(middleware.NewZapLoggerMiddleware(logger))
+	//r.Use(middleware.NewZapLoggerMiddleware(logger))
 
 	// 使用恢复中间件
 	r.Use(gin.Recovery())
@@ -30,7 +29,8 @@ func InitRouter(db *gorm.DB, logger *zap.Logger) *gin.Engine {
 	// 注册路由组
 	apiBase := r.Group("/api")
 	// api.RegisterBackupRouter(r.Group("/api"))
-	api.InitUserRoutes(apiBase, db) // 初始化用户路由
+	api.InitUserRoutes(apiBase, db)  // 初始化用户路由
+	api.SetupPathRoutes(apiBase, db) // 初始化路径路由
 
 	return r
 }

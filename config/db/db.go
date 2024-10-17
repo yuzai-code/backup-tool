@@ -5,15 +5,13 @@ import (
 	"backup-tool/config"
 	"backup-tool/model"
 	"fmt"
-	"log"
-	"os"
+
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 // InitDBConnection 初始化数据库连接
@@ -24,20 +22,14 @@ func InitDBConnection() (*gorm.DB, error) {
 		err        error
 		confDBType string = config.DatabaseDefaultConfig.Type
 	)
-	// 配置日志级别
-	logLevel := logger.Silent
-	if gin.Mode() != gin.ReleaseMode { // 非发布模式输出详细日志
-		logLevel = logger.Info
-	}
 
-	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags),
-		logger.Config{
-			SlowThreshold: time.Second, // 慢查询阈值
-			LogLevel:      logLevel,    // 设置日志级别
-			Colorful:      true,        // 彩色日志
-		},
-	)
+	//newLogger := logger.New(
+	//	log.New(os.Stdout, "\r\n", log.LstdFlags),
+	//	logger.Config{
+	//		SlowThreshold: time.Second, // 慢查询阈值
+	//		//Colorful:      true,        // 彩色日志
+	//	},
+	//)
 	// 兼容sqlite3配置
 	if confDBType == "sqlite3" {
 		confDBType = "sqlite"
@@ -61,9 +53,7 @@ func InitDBConnection() (*gorm.DB, error) {
 				config.DatabaseDefaultConfig.Port,
 				config.DatabaseDefaultConfig.Database,
 			)
-			db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
-				Logger: newLogger,
-			})
+			db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		default:
 			return nil, fmt.Errorf("没有支持的数据库类型: %s", confDBType)
 		}
@@ -81,7 +71,7 @@ func InitDBConnection() (*gorm.DB, error) {
 		sqlDB.SetConnMaxLifetime(time.Hour) // 连接最大存活时间
 
 		// 自动迁移数据库结构
-		err = db.AutoMigrate(&model.User{})
+		// err = db.AutoMigrate(&model.User{})
 		err = db.AutoMigrate(&model.Path{})
 		if err != nil {
 			return nil, err
