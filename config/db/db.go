@@ -3,7 +3,7 @@ package db
 
 import (
 	"backup-tool/config"
-	"backup-tool/model"
+	"backup-tool/internal/model"
 	"fmt"
 
 	"time"

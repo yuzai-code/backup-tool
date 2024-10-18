@@ -1,8 +1,8 @@
 package path
 
 import (
+	"backup-tool/internal/model"
 	"backup-tool/internal/repository"
-	"backup-tool/model"
 )
 
 // PathService 定义了路径服务的接口

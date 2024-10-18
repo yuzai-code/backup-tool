@@ -2,8 +2,8 @@
 package handler
 
 import (
+	"backup-tool/internal/model"
 	"backup-tool/internal/service/path"
-	"backup-tool/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

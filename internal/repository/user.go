@@ -3,7 +3,7 @@
 package repository
 
 import (
-	"backup-tool/model"
+	"backup-tool/internal/model"
 
 	"gorm.io/gorm"
 )

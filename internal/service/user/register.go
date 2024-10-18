@@ -3,8 +3,8 @@
 package user
 
 import (
+	"backup-tool/internal/model"
 	"backup-tool/internal/repository"
-	"backup-tool/model"
 	"errors"
 
 	"golang.org/x/crypto/bcrypt"

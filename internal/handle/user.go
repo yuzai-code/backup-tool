@@ -2,8 +2,8 @@
 package handler
 
 import (
+	"backup-tool/internal/model"
 	"backup-tool/internal/service/user"
-	"backup-tool/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +21,7 @@ func NewUserHandler(userService user.UserService) *UserHandler {
 
 // Register 注册用户的处理函数
 func (h *UserHandler) Register(ctx *gin.Context) {
-	var user model.User
+	user := model.User{}
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
