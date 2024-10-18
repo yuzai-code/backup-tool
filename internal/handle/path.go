@@ -5,6 +5,7 @@ import (
 	"backup-tool/internal/model"
 	"backup-tool/internal/service/path"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,25 @@ type PathHandler struct {
 //   - *PathHandler: 新创建的 PathHandler 实例指针
 func NewPathHandler(pathService path.PathService) *PathHandler {
 	return &PathHandler{pathService: pathService}
+}
+
+// 删除路径
+func (h *PathHandler) DeletePath(c *gin.Context) {
+	// 获取要删除的路径ID
+	id := c.Param("id")
+	// 将id转换为整数
+	pathID, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的路径ID"})
+		return
+	}
+	// 调用路径服务的删除路径方法
+	err = h.pathService.DeletePath(pathID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "路径删除成功"})
 }
 
 // PathConfig 处理路径配置的HTTP请求

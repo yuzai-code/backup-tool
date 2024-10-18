@@ -11,6 +11,7 @@ type PathRepository interface {
 	GetAllDirName() ([]model.PathDTO, error)
 	GetDirName(dirname string) (string, error)
 	SavePath(path *model.Path) error
+	DeletePath(id int) error
 }
 
 // pathRepositoryImpl 是 PathRepository 接口的实现
@@ -18,22 +19,20 @@ type pathRepositoryImpl struct {
 	BaseRepository
 }
 
-// 在 model 包中添加一个新的 DTO 结构体
-type PathDTO struct {
-	DirName  string `json:"dirName"`
-	FilePath string `json:"filePath"`
-	BackPath string `json:"backPath"`
-}
-
 // 创建path数据库实例
 func NewPathRepository(db *gorm.DB) PathRepository {
 	return &pathRepositoryImpl{BaseRepository: NewBaseRepository(db)}
 }
 
+// 删除路径
+func (p *pathRepositoryImpl) DeletePath(id int) error {
+	return p.db.Where("id = ?", id).Delete(&model.Path{}).Error
+}
+
 // GetAllDirName 获取所有目录路径
 func (p *pathRepositoryImpl) GetAllDirName() ([]model.PathDTO, error) {
 	var paths []model.PathDTO
-	err := p.db.Model(&model.Path{}).Select("dir_name, file_path, back_path").Find(&paths).Error
+	err := p.db.Model(&model.Path{}).Select("id, dir_name, file_path, back_path").Find(&paths).Error
 	if err != nil {
 		return nil, err
 	}

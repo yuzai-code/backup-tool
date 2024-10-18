@@ -10,6 +10,7 @@ type PathService interface {
 	GetAllDirNames() ([]model.PathDTO, error)
 	GetDirName(dirname string) (string, error)
 	SavePath(dirName, filePath, backPath string) error
+	DeletePath(id int) error
 }
 
 // pathServiceImpl 是 PathService 接口的实现
@@ -22,6 +23,11 @@ func NewPathService(pathRepo repository.PathRepository) PathService {
 	return &pathServiceImpl{
 		pathRepo: pathRepo,
 	}
+}
+
+// DeletePath 删除路径
+func (s *pathServiceImpl) DeletePath(id int) error {
+	return s.pathRepo.DeletePath(id)
 }
 
 // GetAllDirNames 获取所有目录名称
