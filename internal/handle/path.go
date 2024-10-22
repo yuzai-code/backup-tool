@@ -25,6 +25,23 @@ func NewPathHandler(pathService path.PathService) *PathHandler {
 	return &PathHandler{pathService: pathService}
 }
 
+func (h *PathHandler) GetPathByID(c *gin.Context) {
+	var path model.PathDTO
+	id := c.Param("id")
+	pathID, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的路径ID"})
+		return
+	}
+	// 调用路径服务根据id获取路径信息
+	path, err = h.pathService.GetPathByID(pathID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "路径不存在"})
+	}
+	// 返回路径信息
+	c.JSON(http.StatusOK, gin.H{"path": path})
+}
+
 // 删除路径
 func (h *PathHandler) DeletePath(c *gin.Context) {
 	// 获取要删除的路径ID
@@ -62,7 +79,7 @@ func (h *PathHandler) PathConfig(c *gin.Context) {
 
 	// 检查目录名称是否已存在
 	existingPath, err := h.pathService.GetDirName(newPath.DirName)
-	if err == nil && existingPath != "" {
+	if err == nil && existingPath.DirName != "" {
 		c.JSON(http.StatusConflict, gin.H{"error": "目录名称已存在"})
 		return
 	}
