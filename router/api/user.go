@@ -2,7 +2,7 @@
 package api
 
 import (
-	handler "backup-tool/internal/handle"
+	"backup-tool/internal/handler"
 	repository "backup-tool/internal/repository"
 	service "backup-tool/internal/service/user"
 

@@ -1,7 +1,7 @@
 package api
 
 import (
-	handler "backup-tool/internal/handle"
+	"backup-tool/internal/handler"
 	"backup-tool/internal/repository"
 	"backup-tool/internal/service/path"
 
