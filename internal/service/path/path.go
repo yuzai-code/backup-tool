@@ -52,6 +52,7 @@ func (s *pathServiceImpl) SavePath(dirName, filePath, backPath string) error {
 	// 创建一个新的 model.Path 实例
 	pathModel := &model.Path{
 		DirName:  dirName,
+		FilePath: filePath,
 		BackPath: backPath,
 	}
 	return s.pathRepo.SavePath(pathModel)

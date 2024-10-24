@@ -2,15 +2,21 @@
 package api
 
 import (
-	"backup-tool/internal/service"
+	"backup-tool/internal/handler"
+	"backup-tool/internal/repository"
+	"backup-tool/internal/service/backup"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func BackupRouter(r *gin.RouterGroup) {
+func SetupBackupRouters(r *gin.RouterGroup, db *gorm.DB) {
+	repo := repository.NewPathRepository(db)
+	service := backup.NewPathRepository(repo)
+	handler := handler.NewBackupHandler(service)
 	// backup router
 	backupRouter := r.Group("/backup")
 	{
-		backupRouter.POST("/", service.HandleBackup)
+		backupRouter.POST("/:id", handler.HandleBackup)
 	}
 }
