@@ -20,12 +20,12 @@ type pathRepositoryImpl struct {
 	BaseRepository
 }
 
-// 创建path数据库实例
+// NewPathRepository 创建path数据库实例
 func NewPathRepository(db *gorm.DB) PathRepository {
 	return &pathRepositoryImpl{BaseRepository: NewBaseRepository(db)}
 }
 
-// 获取备份文件配置的详情
+// GetPathByID 获取备份文件配置的详情
 func (p *pathRepositoryImpl) GetPathByID(id int) (model.PathDTO, error) {
 	var path model.PathDTO
 	err := p.db.Model(&model.Path{}).Where("id = ?", id).First(&path).Error
