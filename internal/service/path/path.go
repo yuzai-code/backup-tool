@@ -3,6 +3,8 @@ package path
 import (
 	"backup-tool/internal/model"
 	"backup-tool/internal/repository"
+	"fmt"
+	"strings"
 )
 
 // PathService 定义了路径服务的接口
@@ -47,13 +49,29 @@ func (s *pathServiceImpl) GetDirName(dirname string) (model.Path, error) {
 	return path, err
 }
 
-// SavePath 保存路径配置
 func (s *pathServiceImpl) SavePath(dirName, filePath, backPath string) error {
+	// 判断文件是否存在
+	_, err := s.pathRepo.GetDirName(dirName)
+	if err == nil {
+		return fmt.Errorf("目录名已存在: %s", dirName)
+	}
+
 	// 创建一个新的 model.Path 实例
 	pathModel := &model.Path{
 		DirName:  dirName,
 		FilePath: filePath,
 		BackPath: backPath,
 	}
-	return s.pathRepo.SavePath(pathModel)
+
+	// 保存到数据库
+	err = s.pathRepo.SavePath(pathModel)
+	if err != nil {
+		// 检查是否是唯一性约束失败
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return fmt.Errorf("目录名已存在: %s", dirName)
+		}
+		return err
+	}
+
+	return nil
 }

@@ -77,15 +77,8 @@ func (h *PathHandler) PathConfig(c *gin.Context) {
 		return
 	}
 
-	// 检查目录名称是否已存在
-	existingPath, err := h.pathService.GetDirName(newPath.DirName)
-	if err == nil && existingPath.DirName != "" {
-		c.JSON(http.StatusConflict, gin.H{"error": "目录名称已存在"})
-		return
-	}
-
 	// 保存新的路径配置
-	err = h.pathService.SavePath(newPath.DirName, newPath.FilePath, newPath.BackPath)
+	err := h.pathService.SavePath(newPath.DirName, newPath.FilePath, newPath.BackPath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存路径失败:" + err.Error()})
 		return

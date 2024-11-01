@@ -17,12 +17,12 @@ type PathRepository interface {
 
 // pathRepositoryImpl 是 PathRepository 接口的实现
 type pathRepositoryImpl struct {
-	BaseRepository
+	db *gorm.DB
 }
 
 // NewPathRepository 创建path数据库实例
 func NewPathRepository(db *gorm.DB) PathRepository {
-	return &pathRepositoryImpl{BaseRepository: NewBaseRepository(db)}
+	return &pathRepositoryImpl{db: db}
 }
 
 // GetPathByID 获取备份文件配置的详情

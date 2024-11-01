@@ -16,12 +16,12 @@ type UserRepository interface {
 
 // 用户存储库实现结构体
 type userRepositoryImpl struct {
-	BaseRepository
+	db *gorm.DB
 }
 
 // NewUserRepository 创建新的用户存储库实例
 func NewUserRepository(db *gorm.DB) UserRepository {
-	return &userRepositoryImpl{BaseRepository: NewBaseRepository(db)}
+	return &userRepositoryImpl{db: db}
 }
 
 // Create 创建一个新用户
