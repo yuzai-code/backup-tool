@@ -14,6 +14,7 @@ type PathService interface {
 	SavePath(dirName, filePath, backPath string) error
 	DeletePath(id int) error
 	GetPathByID(id int) (model.PathDTO, error)
+	UpdatePath(id int, path model.PathDTO) error
 }
 
 // pathServiceImpl 是 PathService 接口的实现
@@ -26,6 +27,20 @@ func NewPathService(pathRepo repository.PathRepository) PathService {
 	return &pathServiceImpl{
 		pathRepo: pathRepo,
 	}
+}
+
+func (s *pathServiceImpl) UpdatePath(id int, path model.PathDTO) error {
+	// 判断文件是否存在
+	_, err := s.pathRepo.GetPathByID(id)
+	if err != nil {
+		return err
+	}
+	// 更新数据库
+	err = s.pathRepo.UpdatePath(id, &path) // 使用赋值运算符来重新赋值 err
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *pathServiceImpl) GetPathByID(id int) (model.PathDTO, error) {

@@ -25,6 +25,32 @@ func NewPathHandler(pathService path.PathService) *PathHandler {
 	return &PathHandler{pathService: pathService}
 }
 
+// UpdatePath 处理更新路径的HTTP请求
+func (h *PathHandler) UpdatePath(c *gin.Context) {
+	var path model.PathDTO
+	pathID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的路径id"})
+		return
+	}
+	// 绑定请求体到path结构体
+	if err := c.ShouldBindJSON(&path); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 更新路径信息
+	err = h.pathService.UpdatePath(pathID, path)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 返回成功响应
+	c.JSON(http.StatusOK, gin.H{"message": "路径更新成功"})
+}
+
+// GetPathByID 处理根据路径ID获取路径信息的HTTP请求
 func (h *PathHandler) GetPathByID(c *gin.Context) {
 	var path model.PathDTO
 	id := c.Param("id")

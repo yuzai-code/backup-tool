@@ -13,6 +13,7 @@ type PathRepository interface {
 	SavePath(path *model.Path) error
 	DeletePath(id int) error
 	GetPathByID(id int) (model.PathDTO, error)
+	UpdatePath(id int, path *model.PathDTO) error
 }
 
 // pathRepositoryImpl 是 PathRepository 接口的实现
@@ -23,6 +24,24 @@ type pathRepositoryImpl struct {
 // NewPathRepository 创建path数据库实例
 func NewPathRepository(db *gorm.DB) PathRepository {
 	return &pathRepositoryImpl{db: db}
+}
+
+func (p *pathRepositoryImpl) UpdatePath(id int, path *model.PathDTO) error {
+	var oldPath model.PathDTO
+	// 更新数据
+	err := p.db.Model(&model.Path{}).Where("id = ?", id).Updates(&path).Error
+	if err != nil {
+		return err
+	}
+	// 如果文件路径有变化，就更新
+	if oldPath.FilePath != path.FilePath {
+		// 更新文件路径
+		err = p.db.Model(&model.Path{}).Where("id = ?", id).Update("file_path", path.FilePath).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // GetPathByID 获取备份文件配置的详情

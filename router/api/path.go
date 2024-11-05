@@ -27,5 +27,6 @@ func SetupPathRoutes(router *gin.RouterGroup, db *gorm.DB) {
 		pathGroup.GET("", pathHandler.GetAllPaths)
 		pathGroup.DELETE("/:id", pathHandler.DeletePath)
 		pathGroup.GET("/:id", pathHandler.GetPathByID)
+		pathGroup.PUT("/:id", pathHandler.UpdatePath)
 	}
 }
