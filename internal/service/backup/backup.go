@@ -22,8 +22,10 @@ type BackupServiceImpl struct {
 }
 
 // NewPathRepository 创建一个新的 PathRepositoryImpl 实例
-func NewPathRepository(pathRepo repository.PathRepository) *BackupServiceImpl {
-	return &BackupServiceImpl{pathRepo: pathRepo}
+func NewPathRepository(logger *zap.Logger, pathRepo repository.PathRepository) *BackupServiceImpl {
+	return &BackupServiceImpl{
+		logger:   logger,
+		pathRepo: pathRepo}
 }
 
 // BackupService 处理备份服务的逻辑
