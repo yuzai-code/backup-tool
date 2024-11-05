@@ -26,6 +26,7 @@ func NewPathRepository(db *gorm.DB) PathRepository {
 	return &pathRepositoryImpl{db: db}
 }
 
+// UpdatePath 更新路径配置
 func (p *pathRepositoryImpl) UpdatePath(id int, path *model.PathDTO) error {
 	var oldPath model.PathDTO
 	// 更新数据

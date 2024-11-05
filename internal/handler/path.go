@@ -63,6 +63,7 @@ func (h *PathHandler) GetPathByID(c *gin.Context) {
 	path, err = h.pathService.GetPathByID(pathID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "路径不存在"})
+		return
 	}
 	// 返回路径信息
 	c.JSON(http.StatusOK, gin.H{"path": path})
