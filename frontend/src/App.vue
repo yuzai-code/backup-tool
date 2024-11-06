@@ -1,20 +1,31 @@
 <template>
-  <div class="container">
-    <sidebar />
+    <Header />
+  <div class="container-fluid">
+    <div class="main-content">
+      <Sidebar />
+      <div class="content">
+        <router-view />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api/core";
-import { ref } from "vue";
-import sidebar from "./components/layout/sidebar.vue";
+import Sidebar from "./components/layout/Sidebar.vue";
+import Header from "./components/layout/Header.vue";
 
-const greetMsg = ref("");
-const name = ref("");
 
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  greetMsg.value = await invoke("greet", { name: name.value });
-}
 </script>
-<style scoped></style>
+<style scoped>
+.container-fluid {
+  display: flex;
+}
+.main-content {
+  flex: 1;
+  display: flex;
+}
+.content {
+  flex: 1;
+  padding: 16px;
+}
+</style>
