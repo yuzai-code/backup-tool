@@ -1,25 +1,46 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
+    "allowJs": true, // 允许编译器编译JS，JSX文件
+    "target": "ES2020",  // ：指定ts编译成ES的版本。
+    "lib": ["DOM", "ES2015", "ScriptHost", "ES2019.Array"],   // lib：指定项目运行时使用的库。
+    "skipLibCheck": false,
+    "outDir": "./dist", // 指定输出目录
+
 
     /* Bundler mode */
-    "moduleResolution": "node",  // 修改为 "node"
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
+    "moduleResolution": "Node",
+    "noEmit": true, // 不输出文件,即编译后不会生成任何js文件
+    "noEmitOnError": true, // 发送错误时不输出任何文件
+    "noEmitHelpers": true, // 不生成helper函数，减小体积，需要额外安装，常配合importHelpers一起使用
     "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"],
+      "@views/*": ["src/views/*"],
+      "@store/*": ["src/store/*"],
+      "@router/*": ["src/router/*"],
+    },
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "strict": false, // 开启所有严格的类型检查
+    "noUnusedLocals": true, // 检查只声明、未使用的局部变量(只提示不报错)
+    "noUnusedParameters": true, // 检查未使用的函数参数(只提示不报错)
+    "noFallthroughCasesInSwitch": true,
+    // 防止switch语句贯穿(即如果没有break语句后面不会执行)
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "components.d.ts",
+    "auto-imports.d.ts",
+    "typings/**/*.d.ts",
+    "src/**/*"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

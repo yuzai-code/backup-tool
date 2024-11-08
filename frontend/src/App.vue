@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import Sidebar from "./components/layout/Sidebar.vue";
 </script>
 <style scoped>

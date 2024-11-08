@@ -131,5 +131,5 @@ func (h *PathHandler) GetAllPaths(c *gin.Context) {
 	}
 
 	// 返回路径列表
-	c.JSON(http.StatusOK, gin.H{"paths": paths})
+	c.JSON(http.StatusOK, paths)
 }
