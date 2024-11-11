@@ -1,21 +1,74 @@
 <template>
-        <h3>dsfafdsagsdagasdg</h3>
-        <ul>
-          <li v-for="item in backupList" :key="item.id">{{ item.dir_name }}</li>
-        </ul>
+  <h3>dsfafdsagsdagasdg</h3>
+  <ul>
+    <li v-for="item in backupList" :key="item.id">{{ item.dir_name }}</li>
+  </ul>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>
+            <label>
+              <input type="checkbox" class="checkbox" />
+            </label>
+          </th>
+          <th>Name</th>
+          <th>Job</th>
+          <th>Favorite Color</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- row 1 -->
+        <tr>
+          <th>
+            <label>
+              <input type="checkbox" class="checkbox" />
+            </label>
+          </th>
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="avatar">
+                <div class="mask mask-squircle h-12 w-12">
+                  <img
+                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                    alt="Avatar Tailwind CSS Component"
+                  />
+                </div>
+              </div>
+              <div>
+                <div class="font-bold">Hart Hagerty</div>
+                <div class="text-sm opacity-50">United States</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            Zemlak, Daniel and Leannon
+            <br />
+            <span class="badge badge-ghost badge-sm">Desktop Support Technician</span>
+          </td>
+          <td>Purple</td>
+          <th>
+            <button class="btn btn-ghost btn-xs">details</button>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
-      
-<script setup lang="ts">
-import { ref } from 'vue';
-import { getBackupList } from '../api/backup';
-import { BackupItem } from '../models/home';
 
-const backupList = ref(<BackupItem[]>([]));
-      
+<script setup lang="ts">
+import { ref } from "vue";
+import { getBackupList } from "../api/backup";
+import { BackupItem } from "../models/home";
+
+const backupList = ref(<BackupItem[]>[]);
+
 async function fetchData() {
-const response = await getBackupList();
-backupList.value = response.data;
+  const response = await getBackupList();
+  backupList.value = response.data;
 }
-      
+
 fetchData();
 </script>
