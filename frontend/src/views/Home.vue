@@ -35,7 +35,13 @@
                     </td>
                     <td>{{ item.file_path }}</td>
                     <th>
-                        <button class="btn btn-ghost btn-xs">details</button>
+                        <button class="btn btn-ghost btn-xs" @click="deleteItem(item.id)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </th>
                 </tr>
             </tbody>
@@ -76,4 +82,9 @@ function toggleSelectAll() {
 watch(allSelected, (newValue) => {
     selectAll.value = newValue;
 })
+
+// 删除项的方法
+function deleteItem(id: number) {
+    backupList.value = backupList.value.filter(item => item.id !== id);
+}
 </script>
