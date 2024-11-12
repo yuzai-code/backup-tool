@@ -12,8 +12,8 @@ type Path struct {
 
 // 用于返回需要的路径信息
 type PathDTO struct {
-	ID       uint   `json:"id"`
-	DirName  string `json:"dir_name"`
-	FilePath string `json:"file_path"`
-	BackPath string `json:"back_path"`
+	DirName  string `json:"dir_name"`  // 16 bytes
+	FilePath string `json:"file_path"` // 16 bytes
+	BackPath string `json:"back_path"` // 16 bytes
+	ID       uint   `json:"id"`        // 8 bytes
 }
