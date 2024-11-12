@@ -10,7 +10,7 @@
         </div>
         <ul class="menu w-56">
             <li>
-                <a class="flex flex-row h-14">
+                <a class="flex flex-row h-14" href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 basis-1/4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

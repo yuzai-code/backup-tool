@@ -4,10 +4,13 @@ package handler
 import (
 	"backup-tool/internal/model"
 	"backup-tool/internal/service/path"
+	"backup-tool/utils"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 // PathHandler 结构体封装了路径相关的处理方法
@@ -98,20 +101,42 @@ func (h *PathHandler) DeletePath(c *gin.Context) {
 //   - c *gin.Context: Gin的上下文对象，用于处理HTTP请求和响应
 func (h *PathHandler) PathConfig(c *gin.Context) {
 	var newPath model.Path
-	// 绑定请求体到 newPath 结构体
+
+	// 打印接收到的表单数据，用于调试
+	utils.Logger.Debug("收到的表单数据",
+		zap.String("dir_name", c.PostForm("dir_name")),
+		zap.String("file_path", c.PostForm("file_path")),
+		zap.String("back_path", c.PostForm("back_path")))
+
+	// 使用 ShouldBind 来绑定表单数据
 	if err := c.ShouldBind(&newPath); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求数据"})
+		utils.Logger.Error("无效的请求数据",
+			zap.Error(err),
+			zap.String("dir_name", c.PostForm("dir_name")))
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "无效的请求数据",
+		})
+		return
+	}
+
+	// 验证必要字段
+	if newPath.DirName == "" {
+		utils.Logger.Error("目录名称不能为空")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "目录名称不能为空"})
 		return
 	}
 
 	// 保存新的路径配置
 	err := h.pathService.SavePath(newPath.DirName, newPath.FilePath, newPath.BackPath)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存路径失败:" + err.Error()})
+		utils.Logger.Error("保存路径失败",
+			zap.Error(err),
+			zap.String("dir_name", newPath.DirName))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("保存路径失败: %v", err)})
 		return
 	}
 
-	// 返回成功响应
+	utils.Logger.Info("路径配置成功", zap.String("dir_name", newPath.DirName))
 	c.JSON(http.StatusOK, gin.H{"message": "路径配置成功", "path": newPath})
 }
 

@@ -5,12 +5,11 @@ import (
 	"backup-tool/router/api"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 // InitRouter 初始化 Gin 路由，并注册中间件和路由
-func InitRouter(db *gorm.DB, logger *zap.Logger) *gin.Engine {
+func InitRouter(db *gorm.DB) *gin.Engine {
 	// 创建 Gin 实例
 	r := gin.New()
 
@@ -29,9 +28,9 @@ func InitRouter(db *gorm.DB, logger *zap.Logger) *gin.Engine {
 	// 注册路由组
 	apiBase := r.Group("/api")
 	// api.RegisterBackupRouter(r.Group("/api"))
-	api.SetupUserRoutes(apiBase, db)            // 初始化用户路由
-	api.SetupPathRoutes(apiBase, db)            // 初始化路径路由
-	api.SetupBackupRouters(apiBase, db, logger) // 初始化路径路由
+	api.SetupUserRoutes(apiBase, db)    // 初始化用户路由
+	api.SetupPathRoutes(apiBase, db)    // 初始化路径路由
+	api.SetupBackupRouters(apiBase, db) // 初始化路径路由
 
 	return r
 }

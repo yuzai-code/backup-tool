@@ -1,3 +1,4 @@
+
 export interface BackupItem {
     id: number;
     dir_name: string;
@@ -5,3 +6,5 @@ export interface BackupItem {
     back_path: string;
     selected: boolean;  // 是否选择
 }
+
+// export interface 

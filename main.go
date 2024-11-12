@@ -30,10 +30,10 @@ func main() {
 	}
 
 	// 正确初始化 zap 日志器
-	logger := utils.InitZapLogger() // 从 config 包直接调用 InitZapLogger，而不是从 cfg 结构体
+	utils.InitZapLogger() // 从 config 包直接调用 InitZapLogger，而不是从 cfg 结构体
 
 	// 初始化路由
-	r := router.InitRouter(dbConn, logger)
+	r := router.InitRouter(dbConn)
 
 	// 启动服务
 	if err := r.Run(cfg.Server.Port); err != nil {

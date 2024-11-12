@@ -3,6 +3,7 @@ package backup
 import (
 	"archive/zip"
 	"backup-tool/internal/repository"
+	"backup-tool/utils"
 	"io"
 	"os"
 	"path/filepath"
@@ -18,14 +19,13 @@ type BackupService interface {
 // BackupServiceImpl
 type BackupServiceImpl struct {
 	pathRepo repository.PathRepository
-	logger   *zap.Logger
 }
 
 // NewPathRepository 创建一个新的 PathRepositoryImpl 实例
-func NewPathRepository(logger *zap.Logger, pathRepo repository.PathRepository) *BackupServiceImpl {
+func NewPathRepository(pathRepo repository.PathRepository) *BackupServiceImpl {
 	return &BackupServiceImpl{
-		logger:   logger,
-		pathRepo: pathRepo}
+		pathRepo: pathRepo,
+	}
 }
 
 // BackupService 处理备份服务的逻辑
@@ -34,7 +34,7 @@ func (p *BackupServiceImpl) BackupService(id int) error {
 	path, err := p.pathRepo.GetPathByID(id)
 	if err != nil {
 		// 处理错误
-		p.logger.Error("获取文件信息失败", zap.Error(err))
+		utils.Logger.Error("获取文件信息失败", zap.Error(err))
 		return err
 	}
 
@@ -43,7 +43,7 @@ func (p *BackupServiceImpl) BackupService(id int) error {
 
 	// 如果目录不存在就创建
 	if err := os.MkdirAll(savePath, os.ModePerm); err != nil {
-		p.logger.Error("创建目录失败", zap.Error(err))
+		utils.Logger.Error("创建目录失败", zap.Error(err))
 		return err
 	}
 
@@ -55,18 +55,18 @@ func (p *BackupServiceImpl) BackupService(id int) error {
 	if isZipFile(srcFilePath) {
 		// 直接复制文件
 		if err := copyFile(srcFilePath, dstFilePath); err != nil {
-			p.logger.Error("复制文件失败", zap.Error(err))
+			utils.Logger.Error("复制文件失败", zap.Error(err))
 			return err
 		}
 	} else {
 		// 压缩文件
 		if err := compressFile(srcFilePath, dstFilePath); err != nil {
-			p.logger.Error("压缩文件失败", zap.Error(err))
+			utils.Logger.Error("压缩文件失败", zap.Error(err))
 			return err
 		}
 	}
 
-	p.logger.Info("文件备份成功", zap.String("srcFilePath", srcFilePath), zap.String("dstFilePath", dstFilePath))
+	utils.Logger.Info("文件备份成功", zap.String("srcFilePath", srcFilePath), zap.String("dstFilePath", dstFilePath))
 	return nil
 }
 

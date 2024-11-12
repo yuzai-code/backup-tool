@@ -3,8 +3,11 @@ package path
 import (
 	"backup-tool/internal/model"
 	"backup-tool/internal/repository"
+	"backup-tool/utils"
 	"fmt"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 // PathService 定义了路径服务的接口
@@ -68,6 +71,7 @@ func (s *pathServiceImpl) SavePath(dirName, filePath, backPath string) error {
 	// 判断文件是否存在
 	_, err := s.pathRepo.GetDirName(dirName)
 	if err == nil {
+		utils.Logger.Error("目录名已存在", zap.String("dir_name", dirName))
 		return fmt.Errorf("目录名已存在: %s", dirName)
 	}
 
@@ -83,6 +87,7 @@ func (s *pathServiceImpl) SavePath(dirName, filePath, backPath string) error {
 	if err != nil {
 		// 检查是否是唯一性约束失败
 		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			utils.Logger.Error("目录名已存在", zap.String("dir_name", dirName))
 			return fmt.Errorf("目录名已存在: %s", dirName)
 		}
 		return err

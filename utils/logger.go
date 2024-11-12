@@ -1,4 +1,4 @@
-// config/logger.go
+// utils/logger.go
 package utils
 
 import (
@@ -8,8 +8,10 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+var Logger *zap.Logger
+
 // InitZapLogger 初始化带彩色输出的 zap 日志器
-func InitZapLogger() *zap.Logger {
+func InitZapLogger() {
 	config := zap.NewDevelopmentConfig()                                // 使用开发环境配置
 	config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // 启用彩色日志输出
 	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder        // 格式化时间
@@ -19,6 +21,5 @@ func InitZapLogger() *zap.Logger {
 	if err != nil {
 		log.Fatalf("初始化 zap 日志器失败: %v", err)
 	}
-
-	return logger
+	Logger = logger
 }

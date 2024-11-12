@@ -2,7 +2,9 @@ package repository
 
 import (
 	"backup-tool/internal/model"
+	"backup-tool/utils"
 
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -74,8 +76,10 @@ func (p *pathRepositoryImpl) GetAllDirName() ([]model.PathDTO, error) {
 func (p *pathRepositoryImpl) GetDirName(dirname string) (model.Path, error) {
 	// 查询当前配置备份文件的名称
 	var path model.Path
-	err := p.db.Where("dirname = ?", dirname).First(&path).Error
+	err := p.db.Where("dir_name = ?", dirname).First(&path).Error
+	utils.Logger.Error("无效的请求数据", zap.Error(err))
 	if err != nil {
+		println(err.Error())
 		return model.Path{}, err
 	}
 	return path, nil
