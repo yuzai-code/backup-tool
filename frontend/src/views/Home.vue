@@ -35,7 +35,7 @@
                     </td>
                     <td>{{ item.file_path }}</td>
                     <th>
-                        <button class="btn btn-ghost btn-xs" @click="deleteItem(item.id)">
+                        <button class="btn btn-ghost btn-xs" @click="confirmDelete(item.id)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { getBackupList } from "../api/backup";
+import { deleteBackup, getBackupList } from "../api/backup";
 import { BackupItem } from "../models/home";
 
 const backupList = ref(<BackupItem[]>[]);
@@ -73,7 +73,7 @@ async function fetchData() {
     backupList.value = response.data.map((item: BackupItem) => ({ ...item, selected: false }));
 }
 
-fetchData();
+fetchData()
 
 // 计算属性：检查所有项是否被选择
 const allSelected = computed(() => {
@@ -92,8 +92,17 @@ watch(allSelected, (newValue) => {
     selectAll.value = newValue;
 })
 
+// 删除确认窗口
+function confirmDelete(id: number) {
+    if (window.confirm("确认要删除此项吗？")) {
+        deleteItem(id)
+    }
+}
+
 // 删除项的方法
-function deleteItem(id: number) {
+async function deleteItem(id: number) {
+    // 调用后端接口删除配置项
+    const response = await deleteBackup(id);
     backupList.value = backupList.value.filter(item => item.id !== id);
 }
 

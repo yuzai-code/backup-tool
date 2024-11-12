@@ -9,3 +9,8 @@ export function getBackupList() {
 export function createBackup() {
     return request.post('/path/')
 }
+
+// 删除备份
+export function deleteBackup(id) {
+    return request.delete(`/path/${id}/`)
+}
