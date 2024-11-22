@@ -14,8 +14,10 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "^2",
     "axios": "^1.7.7",
+    "pnpm": "^9.14.2",
     "unplugin-auto-import": "^0.18.3",
     "vue": "^3.5.12",
+    "vue-final-modal": "^4.5.5",
     "vue-router": "4"
   },
   "devDependencies": {

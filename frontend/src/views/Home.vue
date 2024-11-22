@@ -48,7 +48,7 @@
         </table>
     </div>
     <div class="fixed bottom-4 right-4">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" @click="showCard = true">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -56,15 +56,39 @@
             </svg>
         </button>
     </div>
+    <VueFinalModal v-model="showCard" class="fixed inset-0 z-50 flex items-center justify-center"
+        content-class="w-96 bg-base-100 shadow-xl rounded-lg">
+        <div class="card bg-base-100 w-96 shadow-xl">
+            <div class="card-body">
+                <label class="input input-bordered flex items-center gap-2">
+                    文件名
+                    <input type="text" class="grow" placeholder="为需要备份的文件起一个文件名" />
+                </label>
+                <label class="input input-bordered flex items-center gap-2">
+                    文件路径
+                    <input type="text" class="grow" placeholder="文件现在所在的路径" />
+                </label>
+                <label class="input input-bordered flex items-center gap-2">
+                    备份路径
+                    <input type="text" class="grow" placeholder="文件备份需要存储的路径" />
+                </label>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary" @click="showCard = false">添加</button>
+                </div>
+            </div>
+        </div>
+    </VueFinalModal>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { deleteBackup, getBackupList } from "../api/backup";
 import { BackupItem } from "../models/home";
+import { VueFinalModal } from "vue-final-modal";
 
 const backupList = ref(<BackupItem[]>[]);
 const selectAll = ref(false);
+const showCard = ref(false);  // 控制显示
 
 // fetchData 调用后端api获取数据
 async function fetchData() {
