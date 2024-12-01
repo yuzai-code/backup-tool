@@ -6,8 +6,8 @@ export function getBackupList() {
 }
 
 // 创建备份
-export function createBackup() {
-    return request.post('/path/')
+export function createBackup(data) {
+    return request.post('/path/', data)
 }
 
 // 删除备份

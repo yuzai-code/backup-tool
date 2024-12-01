@@ -35,6 +35,9 @@ importers:
       vue-router:
         specifier: '4'
         version: 4.4.3(vue@3.5.12(typescript@5.6.3))
+      vue-toastification:
+        specifier: 2.0.0-rc.5
+        version: 2.0.0-rc.5(vue@3.5.12(typescript@5.6.3))
     devDependencies:
       '@tauri-apps/cli':
         specifier: ^2
@@ -1212,6 +1215,11 @@ packages:
     peerDependencies:
       vue: ^3.2.0
 
+  vue-toastification@2.0.0-rc.5:
+    resolution: {integrity: sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==}
+    peerDependencies:
+      vue: ^3.0.2
+
   vue-tsc@2.1.10:
     resolution: {integrity: sha512-RBNSfaaRHcN5uqVqJSZh++Gy/YUzryuv9u1aFWhsammDJXNtUiJMNoJ747lZcQ68wUQFx6E73y4FY3D8E7FGMA==}
     hasBin: true
@@ -2249,6 +2257,10 @@ snapshots:
   vue-router@4.4.3(vue@3.5.12(typescript@5.6.3)):
     dependencies:
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.12(typescript@5.6.3)
+
+  vue-toastification@2.0.0-rc.5(vue@3.5.12(typescript@5.6.3)):
+    dependencies:
       vue: 3.5.12(typescript@5.6.3)
 
   vue-tsc@2.1.10(typescript@5.6.3):

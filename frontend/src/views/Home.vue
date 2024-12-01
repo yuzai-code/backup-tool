@@ -105,24 +105,33 @@
             </div>
         </div>
     </VueFinalModal>
+    <ConfirmDialog
+        v-model="showConfirmDialog"
+        :title="'确认删除'"
+        :message="'确定要删除这个备份配置吗？此操作不可撤销。'"
+        @confirm="handleDeleteConfirm"
+    />
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { deleteBackup, getBackupList } from "../api/backup";
+import { deleteBackup, getBackupList, createBackup } from "../api/backup";
 import { BackupItem } from "../models/home";
 import { VueFinalModal } from "vue-final-modal";
+import { showToast } from '../utils/toast'
+import { ErrorCode } from '../config/errorCode'
+import ConfirmDialog from '../components/ConfirmDialog.vue'
 
 const backupList = ref(<BackupItem[]>[]);
 const selectAll = ref(false);
 const showCard = ref(false);  // 控制显示
 
 // 添加表单数据
-const formData = ref({
-    dirName: '',
-    filePath: '',
-    backPath: ''
-});
+const formData = ref<Omit<BackupItem, 'id' | 'selected'>>({
+    dir_name: '',
+    file_path: '',
+    back_path: ''
+})
 
 // 添加错误信息
 const errors = ref({
@@ -130,6 +139,10 @@ const errors = ref({
     filePath: '',
     backPath: ''
 });
+
+// 添加确认对话框相关的状态
+const showConfirmDialog = ref(false)
+const pendingDeleteId = ref<number | null>(null)
 
 // 验证表单的方法
 const validateForm = () => {
@@ -159,19 +172,41 @@ const validateForm = () => {
 };
 
 // 修改添加按钮的处理方法
-const handleSubmit = () => {
+const handleSubmit = async() => {
     if (validateForm()) {
-        // TODO: 这里添加提交到后端的逻辑
-        console.log('表单数据有效，可以提交', formData.value);
-        showCard.value = false;
+        try {
+            const response = await createBackup(formData.value);
+            if (response.status === ErrorCode.SUCCESS) {
+                showToast.success('添加成功');
+                await fetchData();
+                showCard.value = false;
+                // 重置表单
+                formData.value = {
+                    dir_name: '',
+                    file_path: '',
+                    back_path: ''
+                };
+            } else {
+                showToast.error(response.data.message || '添加失败');
+            }
+        } catch (error) {
+            showToast.error('系统错误，请稍后重试');
+        }
     }
 };
 
 // fetchData 调用后端api获取数据
 async function fetchData() {
-    // 获取备份文件列表
-    const response = await getBackupList();
-    backupList.value = response.data.map((item: BackupItem) => ({ ...item, selected: false }));
+    try {
+        const response = await getBackupList();
+        if (response.status === ErrorCode.SUCCESS) {
+            backupList.value = response.data.map((item: BackupItem) => ({ ...item, selected: false }));
+        } else {
+            showToast.error(response.data.message || '获取数据失败');
+        }
+    } catch (error) {
+        showToast.error('系统错误，请稍后重试');
+    }
 }
 
 fetchData()
@@ -193,22 +228,28 @@ watch(allSelected, (newValue) => {
     selectAll.value = newValue;
 })
 
-// 删除确认窗口
+// 修改删除确认方法
 function confirmDelete(id: number) {
-    if (window.confirm("确认要删除此项吗？")) {
-        deleteItem(id)
+    pendingDeleteId.value = id
+    showConfirmDialog.value = true
+}
+
+// 处理确认删除
+async function handleDeleteConfirm() {
+    if (pendingDeleteId.value === null) return
+    
+    try {
+        const response = await deleteBackup(pendingDeleteId.value);
+        if (response.status === ErrorCode.SUCCESS) {
+            showToast.success('删除成功');
+            backupList.value = backupList.value.filter(item => item.id !== pendingDeleteId.value);
+        } else {
+            showToast.error(response.data.message || '删除失败');
+        }
+    } catch (error) {
+        showToast.error('系统错误，请稍后重试');
+    } finally {
+        pendingDeleteId.value = null
     }
-}
-
-// 删除项的方法
-async function deleteItem(id: number) {
-    // 调用后端接口删除配置项
-    const response = await deleteBackup(id);
-    backupList.value = backupList.value.filter(item => item.id !== id);
-}
-
-// 创建备份文件配置
-function createBackup() {
-    console.log('createBackup');
 }
 </script>
