@@ -67,7 +67,7 @@
                             type="text" 
                             class="grow" 
                             placeholder="为需要备份的文件起一个文件名" 
-                            v-model="formData.dirName"
+                            v-model="formData.dir_name"
                         />
                     </label>
                     <div class="text-error text-sm mt-1" v-if="errors.dirName">{{ errors.dirName }}</div>
@@ -80,7 +80,7 @@
                             type="text" 
                             class="grow" 
                             placeholder="文件现在所在的路径" 
-                            v-model="formData.filePath"
+                            v-model="formData.file_path"
                         />
                     </label>
                     <div class="text-error text-sm mt-1" v-if="errors.filePath">{{ errors.filePath }}</div>
@@ -93,7 +93,7 @@
                             type="text" 
                             class="grow" 
                             placeholder="文件备份需要存储的路径" 
-                            v-model="formData.backPath"
+                            v-model="formData.back_path"
                         />
                     </label>
                     <div class="text-error text-sm mt-1" v-if="errors.backPath">{{ errors.backPath }}</div>
@@ -153,17 +153,17 @@ const validateForm = () => {
         backPath: ''
     };
 
-    if (!formData.value.dirName.trim()) {
+    if (!formData.value.dir_name.trim()) {
         errors.value.dirName = '文件名不能为空';
         isValid = false;
     }
 
-    if (!formData.value.filePath.trim()) {
+    if (!formData.value.file_path.trim()) {
         errors.value.filePath = '文件路径不能为空';
         isValid = false;
     }
 
-    if (!formData.value.backPath.trim()) {
+    if (!formData.value.back_path.trim()) {
         errors.value.backPath = '备份路径不能为空';
         isValid = false;
     }
@@ -175,6 +175,7 @@ const validateForm = () => {
 const handleSubmit = async() => {
     if (validateForm()) {
         try {
+            console.log(`output->formData.value:`,formData.value)
             const response = await createBackup(formData.value);
             if (response.status === ErrorCode.SUCCESS) {
                 showToast.success('添加成功');
@@ -187,7 +188,7 @@ const handleSubmit = async() => {
                     back_path: ''
                 };
             } else {
-                showToast.error(response.data.message || '添加失败');
+                showToast.error(response.data.error || '添加失败');
             }
         } catch (error) {
             showToast.error('系统错误，请稍后重试');
@@ -202,7 +203,7 @@ async function fetchData() {
         if (response.status === ErrorCode.SUCCESS) {
             backupList.value = response.data.map((item: BackupItem) => ({ ...item, selected: false }));
         } else {
-            showToast.error(response.data.message || '获取数据失败');
+            showToast.error(response.data.error || '获取数据失败');
         }
     } catch (error) {
         showToast.error('系统错误，请稍后重试');
@@ -244,7 +245,7 @@ async function handleDeleteConfirm() {
             showToast.success('删除成功');
             backupList.value = backupList.value.filter(item => item.id !== pendingDeleteId.value);
         } else {
-            showToast.error(response.data.message || '删除失败');
+            showToast.error(response.data.error || '删除失败');
         }
     } catch (error) {
         showToast.error('系统错误，请稍后重试');
