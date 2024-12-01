@@ -60,20 +60,47 @@
         content-class="w-96 bg-base-100 shadow-xl rounded-lg">
         <div class="card bg-base-100 w-96 shadow-xl">
             <div class="card-body">
-                <label class="input input-bordered flex items-center gap-2">
-                    文件名
-                    <input type="text" class="grow" placeholder="为需要备份的文件起一个文件名" />
-                </label>
-                <label class="input input-bordered flex items-center gap-2">
-                    文件路径
-                    <input type="text" class="grow" placeholder="文件现在所在的路径" />
-                </label>
-                <label class="input input-bordered flex items-center gap-2">
-                    备份路径
-                    <input type="text" class="grow" placeholder="文件备份需要存储的路径" />
-                </label>
+                <div class="form-control w-full">
+                    <label class="input input-bordered flex items-center gap-2" :class="{ 'input-error': errors.dirName }">
+                        文件名
+                        <input 
+                            type="text" 
+                            class="grow" 
+                            placeholder="为需要备份的文件起一个文件名" 
+                            v-model="formData.dirName"
+                        />
+                    </label>
+                    <div class="text-error text-sm mt-1" v-if="errors.dirName">{{ errors.dirName }}</div>
+                </div>
+
+                <div class="form-control w-full">
+                    <label class="input input-bordered flex items-center gap-2" :class="{ 'input-error': errors.filePath }">
+                        文件路径
+                        <input 
+                            type="text" 
+                            class="grow" 
+                            placeholder="文件现在所在的路径" 
+                            v-model="formData.filePath"
+                        />
+                    </label>
+                    <div class="text-error text-sm mt-1" v-if="errors.filePath">{{ errors.filePath }}</div>
+                </div>
+
+                <div class="form-control w-full">
+                    <label class="input input-bordered flex items-center gap-2" :class="{ 'input-error': errors.backPath }">
+                        备份路径
+                        <input 
+                            type="text" 
+                            class="grow" 
+                            placeholder="文件备份需要存储的路径" 
+                            v-model="formData.backPath"
+                        />
+                    </label>
+                    <div class="text-error text-sm mt-1" v-if="errors.backPath">{{ errors.backPath }}</div>
+                </div>
+
                 <div class="card-actions justify-end">
-                    <button class="btn btn-primary" @click="showCard = false">添加</button>
+                    <button class="btn btn-primary" @click="handleSubmit">添加</button>
                 </div>
             </div>
         </div>
@@ -89,6 +116,56 @@ import { VueFinalModal } from "vue-final-modal";
 const backupList = ref(<BackupItem[]>[]);
 const selectAll = ref(false);
 const showCard = ref(false);  // 控制显示
+
+// 添加表单数据
+const formData = ref({
+    dirName: '',
+    filePath: '',
+    backPath: ''
+});
+
+// 添加错误信息
+const errors = ref({
+    dirName: '',
+    filePath: '',
+    backPath: ''
+});
+
+// 验证表单的方法
+const validateForm = () => {
+    let isValid = true;
+    errors.value = {
+        dirName: '',
+        filePath: '',
+        backPath: ''
+    };
+
+    if (!formData.value.dirName.trim()) {
+        errors.value.dirName = '文件名不能为空';
+        isValid = false;
+    }
+
+    if (!formData.value.filePath.trim()) {
+        errors.value.filePath = '文件路径不能为空';
+        isValid = false;
+    }
+
+    if (!formData.value.backPath.trim()) {
+        errors.value.backPath = '备份路径不能为空';
+        isValid = false;
+    }
+
+    return isValid;
+};
+
+// 修改添加按钮的处理方法
+const handleSubmit = () => {
+    if (validateForm()) {
+        // TODO: 这里添加提交到后端的逻辑
+        console.log('表单数据有效，可以提交', formData.value);
+        showCard.value = false;
+    }
+};
 
 // fetchData 调用后端api获取数据
 async function fetchData() {
