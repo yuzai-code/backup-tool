@@ -114,56 +114,63 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import { deleteBackup, getBackupList, createBackup } from "../api/backup";
 import { BackupItem } from "../models/home";
 import { VueFinalModal } from "vue-final-modal";
 import { showToast } from '../utils/toast'
 import { ErrorCode } from '../config/errorCode'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
+import { getErrorMessage } from '../utils/error';
 
-const backupList = ref(<BackupItem[]>[]);
+// 定义状态
+const backupList = ref<BackupItem[]>([]);
 const selectAll = ref(false);
-const showCard = ref(false);  // 控制显示
+const showCard = ref(false);
+const showConfirmDialog = ref(false);
+const pendingDeleteId = ref<number | null>(null);
 
-// 添加表单数据
+// 表单数据
 const formData = ref<Omit<BackupItem, 'id' | 'selected'>>({
     dir_name: '',
     file_path: '',
     back_path: ''
-})
+});
 
-// 添加错误信息
+// 表单错误信息
 const errors = ref({
     dirName: '',
     filePath: '',
     backPath: ''
 });
 
-// 添加确认对话框相关的状态
-const showConfirmDialog = ref(false)
-const pendingDeleteId = ref<number | null>(null)
+// 计算属性
+const allSelected = computed(() => {
+    return backupList.value.length > 0 && backupList.value.every(item => item.selected);
+});
 
-// 验证表单的方法
-const validateForm = () => {
+// 表单验证
+const validateForm = (): boolean => {
+    const { dir_name, file_path, back_path } = formData.value;
     let isValid = true;
+    
     errors.value = {
         dirName: '',
         filePath: '',
         backPath: ''
     };
 
-    if (!formData.value.dir_name.trim()) {
+    if (!dir_name.trim()) {
         errors.value.dirName = '文件名不能为空';
         isValid = false;
     }
 
-    if (!formData.value.file_path.trim()) {
+    if (!file_path.trim()) {
         errors.value.filePath = '文件路径不能为空';
         isValid = false;
     }
 
-    if (!formData.value.back_path.trim()) {
+    if (!back_path.trim()) {
         errors.value.backPath = '备份路径不能为空';
         isValid = false;
     }
@@ -171,73 +178,64 @@ const validateForm = () => {
     return isValid;
 };
 
-// 修改添加按钮的处理方法
-const handleSubmit = async() => {
-    if (validateForm()) {
-        try {
-            console.log(`output->formData.value:`,formData.value)
-            const response = await createBackup(formData.value);
-            if (response.status === ErrorCode.SUCCESS) {
-                showToast.success('添加成功');
-                await fetchData();
-                showCard.value = false;
-                // 重置表单
-                formData.value = {
-                    dir_name: '',
-                    file_path: '',
-                    back_path: ''
-                };
-            } else {
-                showToast.error(response.data.error || '添加失败');
-            }
-        } catch (error) {
-            showToast.error('系统错误，请稍后重试');
-        }
-    }
+// 重置表单
+const resetForm = () => {
+    formData.value = {
+        dir_name: '',
+        file_path: '',
+        back_path: ''
+    };
 };
 
-// fetchData 调用后端api获取数据
-async function fetchData() {
+// 获取备份列表数据
+const fetchData = async () => {
     try {
         const response = await getBackupList();
         if (response.status === ErrorCode.SUCCESS) {
             backupList.value = response.data.map((item: BackupItem) => ({ ...item, selected: false }));
         } else {
-            showToast.error(response.data.error || '获取数据失败');
+            showToast.error(response.data.error || response.data.message || '获取数据失败');
         }
     } catch (error) {
-        showToast.error('系统错误，请稍后重试');
+        showToast.error(getErrorMessage(error));
     }
-}
+};
 
-fetchData()
+// 提交表单
+const handleSubmit = async () => {
+    if (validateForm()) {
+        try {
+            const response = await createBackup(formData.value);
+            if (response.status === ErrorCode.SUCCESS) {
+                showToast.success('添加成功');
+                await fetchData();
+                showCard.value = false;
+                resetForm();
+            } else {
+                showToast.error(response.data.error || response.data.message || '添加失败');
+            }
+        } catch (error) {
+            showToast.error(getErrorMessage(error));
+        }
+    }
+};
 
-// 计算属性：检查所有项是否被选择
-const allSelected = computed(() => {
-    return backupList.value.every(item => item.selected);
-});
-
-// 监听selectAll 的变化，更新所有项的状态
-function toggleSelectAll() {
+// 处理全选/取消全选
+const toggleSelectAll = () => {
     backupList.value.forEach(item => {
         item.selected = selectAll.value;
     });
-}
+};
 
-// 监听backupList的变化，更新selectAll 的状态
-watch(allSelected, (newValue) => {
-    selectAll.value = newValue;
-})
+// 确认删除
+const confirmDelete = (id: number) => {
+    pendingDeleteId.value = id;
+    showConfirmDialog.value = true;
+};
 
-// 修改删除确认方法
-function confirmDelete(id: number) {
-    pendingDeleteId.value = id
-    showConfirmDialog.value = true
-}
-
-// 处理确认删除
-async function handleDeleteConfirm() {
-    if (pendingDeleteId.value === null) return
+// 执行删除操作
+const handleDeleteConfirm = async () => {
+    if (pendingDeleteId.value === null) return;
     
     try {
         const response = await deleteBackup(pendingDeleteId.value);
@@ -245,12 +243,20 @@ async function handleDeleteConfirm() {
             showToast.success('删除成功');
             backupList.value = backupList.value.filter(item => item.id !== pendingDeleteId.value);
         } else {
-            showToast.error(response.data.error || '删除失败');
+            showToast.error(response.data.error || response.data.message || '删除失败');
         }
     } catch (error) {
-        showToast.error('系统错误，请稍后重试');
+        showToast.error(getErrorMessage(error));
     } finally {
-        pendingDeleteId.value = null
+        pendingDeleteId.value = null;
     }
-}
+};
+
+// 监听器
+watch(allSelected, (newValue) => {
+    selectAll.value = newValue;
+});
+
+// 始化
+fetchData();
 </script>
