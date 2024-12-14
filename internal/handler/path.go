@@ -69,7 +69,7 @@ func (h *PathHandler) GetPathByID(c *gin.Context) {
 		return
 	}
 	// 返回路径信息
-	c.JSON(http.StatusOK, gin.H{"path": path})
+	c.JSON(http.StatusOK, path)
 }
 
 // 删除路径

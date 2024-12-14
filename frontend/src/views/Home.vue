@@ -28,12 +28,12 @@
                         </div>
                     </td>
                     <td>
-                        {{ item.back_path }}
+                        {{ item.file_path }}
                         <!-- Zemlak, Daniel and Leannon -->
                         <!-- <br /> -->
                         <!-- <span class="badge badge-ghost badge-sm">Desktop Support Technician</span> -->
                     </td>
-                    <td>{{ item.file_path }}</td>
+                    <td>{{ item.back_path }}</td>
                     <th>
                         <button class="btn btn-ghost btn-xs" @click="confirmDelete(item.id)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
