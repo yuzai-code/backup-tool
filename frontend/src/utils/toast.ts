@@ -1,10 +1,10 @@
-import { useToast } from 'vue-toastification'
-import type { ToastOptions } from 'vue-toastification'
+import { useToast, POSITION } from 'vue-toastification'
+import type { PluginOptions as ToastOptions } from 'vue-toastification'
 
 const toast = useToast()
 
 const defaultOptions: ToastOptions = {
-    position: "top-right",
+    position: POSITION.TOP_RIGHT,
     timeout: 3000,
     closeOnClick: true,
     pauseOnFocusLoss: true,
