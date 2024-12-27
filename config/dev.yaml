@@ -9,3 +9,6 @@ database:
   user: "root"
   password: "mypass"
   dbname: "backup"
+logger:
+  path: "./logs/app.log"
+  level: "debug"

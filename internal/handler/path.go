@@ -4,7 +4,7 @@ package handler
 import (
 	"backup-tool/internal/model"
 	"backup-tool/internal/service/path"
-	"backup-tool/utils"
+	"backup-tool/utils/logger"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -103,14 +103,14 @@ func (h *PathHandler) PathConfig(c *gin.Context) {
 	var newPath model.Path
 
 	// 打印接收到的表单数据，用于调试
-	utils.Logger.Debug("收到的表单数据",
+	logger.Log.Debug("收到的表单数据",
 		zap.String("dir_name", c.PostForm("dir_name")),
 		zap.String("file_path", c.PostForm("file_path")),
 		zap.String("back_path", c.PostForm("back_path")))
 
 	// 使用 ShouldBind 来绑定表单数据
 	if err := c.ShouldBind(&newPath); err != nil {
-		utils.Logger.Error("无效的请求数据",
+		logger.Log.Error("无效的请求数据",
 			zap.Error(err),
 			zap.String("dir_name", c.PostForm("dir_name")))
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -121,7 +121,7 @@ func (h *PathHandler) PathConfig(c *gin.Context) {
 
 	// 验证必要字段
 	if newPath.DirName == "" {
-		utils.Logger.Error("目录名称不能为空")
+		logger.Log.Error("目录名称不能为空")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "目录名称不能为空"})
 		return
 	}
@@ -129,14 +129,14 @@ func (h *PathHandler) PathConfig(c *gin.Context) {
 	// 保存新的路径配置
 	err := h.pathService.SavePath(newPath.DirName, newPath.FilePath, newPath.BackPath)
 	if err != nil {
-		utils.Logger.Error("保存路径失败",
+		logger.Log.Error("保存路径失败",
 			zap.Error(err),
 			zap.String("dir_name", newPath.DirName))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("保存路径失败: %v", err)})
 		return
 	}
 
-	utils.Logger.Info("路径配置成功", zap.String("dir_name", newPath.DirName))
+	logger.Log.Info("路径配置成功", zap.String("dir_name", newPath.DirName))
 	c.JSON(http.StatusOK, gin.H{"message": "路径配置成功", "path": newPath})
 }
 

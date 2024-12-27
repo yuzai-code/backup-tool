@@ -9,4 +9,6 @@ database:
   user: "produser"
   password: "prodpassword"
   dbname: "proddb"
-
+logger:
+  path: "./logs/app.log"
+  level: "debug"

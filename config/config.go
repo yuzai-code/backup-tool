@@ -12,6 +12,7 @@ import (
 type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
+	Logger   LoggerConfig
 }
 
 // ServerConfig结构体定义了服务器的配置，包括端口号
@@ -31,6 +32,11 @@ type DatabaseConfig struct {
 	Type       string // 数据库类型
 	Port       int    // 端口号
 	UnixSocket bool
+}
+
+type LoggerConfig struct {
+	Level string
+	Path  string
 }
 
 // LoadConfig 函数根据给定的环境名称加载相应的配置文件，并将其解析为Config结构体。

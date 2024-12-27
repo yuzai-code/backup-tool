@@ -2,7 +2,7 @@ package repository
 
 import (
 	"backup-tool/internal/model"
-	"backup-tool/utils"
+	"backup-tool/utils/logger"
 	"fmt"
 
 	"go.uber.org/zap"
@@ -82,7 +82,7 @@ func (p *pathRepositoryImpl) GetDirName(dirname string) (model.Path, error) {
 		if err == gorm.ErrRecordNotFound {
 			return model.Path{}, fmt.Errorf("目录名称 %s 不存在", dirname)
 		}
-		utils.Logger.Error("查询目录名称失败", zap.Error(err))
+		logger.Log.Error("查询目录名称失败", zap.Error(err))
 		return model.Path{}, err
 	}
 	return path, nil

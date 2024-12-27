@@ -3,6 +3,7 @@ module backup-tool
 go 1.22.6
 
 require (
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/sqlite v1.5.6
 )
