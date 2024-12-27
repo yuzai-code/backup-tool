@@ -84,3 +84,4 @@ dist-ssr
 *.sln
 *.sw?
 frontend/.eslintrc-auto-import.json
+backup-tool

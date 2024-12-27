@@ -2,7 +2,7 @@
 
 # 生产环境配置
 server:
-  port: ":80"
+  port: ":8080"
 database:
   host: "prod-db-host"
   port: 5432
@@ -11,4 +11,4 @@ database:
   dbname: "proddb"
 logger:
   path: "./logs/app.log"
-  level: "debug"
+  level: "error"
